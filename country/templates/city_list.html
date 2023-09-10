@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>State and City</title>
+</head>
+<body>
+
+<!-- city_list.html -->
+<label for="state">Select a State:</label>
+<select id="state" onchange="filterCities()">
+    <option value="">All States</option>
+    {% for state in states %}
+        <option value="{{ state.id }}">{{ state.state }}</option>
+    {% endfor %}
+</select>
+
+<label for="city">Select a City:</label>
+<select id="city">
+    <option value="">All Cities</option>
+    {% for city in cities %}
+        <option value="{{ city.id }}" data-state="{{ city.state.id }}">{{ city.city }}</option>
+    {% endfor %}
+</select>
+
+
+</body>
+
+<script>
+    function filterCities() {
+        const selectedStateId = document.getElementById('state').value;
+        const citySelect = document.getElementById('city');
+        const cityList = document.querySelectorAll('.city-item');
+
+        // Show all cities if no state is selected
+        if (!selectedStateId) {
+            citySelect.innerHTML = '<option value="">All Cities</option>';
+            cityList.forEach(cityItem => cityItem.style.display = 'block');
+            return;
+        }
+
+        // Filter cities by the selected state
+        citySelect.innerHTML = '<option value="">All Cities</option>';
+        cityList.forEach(cityItem => {
+            const cityStateId = cityItem.getAttribute('data-state');
+            if (cityStateId === selectedStateId) {
+                cityItem.style.display = 'block';
+                const option = document.createElement('option');
+                option.value = cityItem.textContent;
+                option.textContent = cityItem.textContent;
+                citySelect.appendChild(option);
+            } else {
+                cityItem.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+</html>
